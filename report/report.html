@@ -1,0 +1,997 @@
+<title>Notochordal EV Corona Atlas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground: #f2f5f5;
+    --panel: #ffffff;
+    --panel-sunk: #e9eeee;
+    --rule: #cfd9d9;
+    --rule-soft: #e0e7e7;
+    --ink: #10201f;
+    --ink-2: #3d5250;
+    --ink-3: #6b8180;
+    --ev: #0b8f9c;
+    --sol: #c25518;
+    --ev-wash: #0b8f9c1f;
+    --sol-wash: #c255181f;
+    --flag: #8a6d1f;
+    --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+    --body: "Source Serif 4", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, "Consolas", monospace;
+    --measure: 68ch;
+    --wide: 1140px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0d1615;
+      --panel: #142120;
+      --panel-sunk: #0a1211;
+      --rule: #2a3d3b;
+      --rule-soft: #1e2e2d;
+      --ink: #e6efee;
+      --ink-2: #a9bfbd;
+      --ink-3: #7b9391;
+      --ev: #17a0b0;
+      --sol: #d4712f;
+      --ev-wash: #17a0b029;
+      --sol-wash: #d4712f29;
+      --flag: #c9a648;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0d1615;
+    --panel: #142120;
+    --panel-sunk: #0a1211;
+    --rule: #2a3d3b;
+    --rule-soft: #1e2e2d;
+    --ink: #e6efee;
+    --ink-2: #a9bfbd;
+    --ink-3: #7b9391;
+    --ev: #17a0b0;
+    --sol: #d4712f;
+    --ev-wash: #17a0b029;
+    --sol-wash: #d4712f29;
+    --flag: #c9a648;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--wide); margin: 0 auto; padding: 0 28px 96px; }
+  .col { max-width: var(--measure); }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.12; margin: 0; }
+  p { margin: 0 0 1em; }
+  a { color: var(--ev); }
+
+  /* masthead ------------------------------------------------------------- */
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding: 40px 0 0;
+    margin-bottom: 0;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 18px;
+  }
+  h1 { font-size: clamp(34px, 5.4vw, 58px); font-weight: 700; letter-spacing: -.022em; }
+  .standfirst {
+    font-size: 20px; color: var(--ink-2); max-width: 60ch;
+    margin: 18px 0 32px; line-height: 1.5;
+  }
+  .readout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+  .readout div {
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 12px 14px 13px;
+  }
+  .readout dt {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px;
+  }
+  .readout dd {
+    margin: 0; font-family: var(--display); font-weight: 700; font-size: 23px;
+    font-variant-numeric: tabular-nums; letter-spacing: -.01em;
+  }
+  .readout dd small { font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--ink-3); }
+
+  /* sections -------------------------------------------------------------- */
+  section { padding-top: 54px; }
+  h2 {
+    font-size: 27px; font-weight: 700; letter-spacing: -.014em;
+    padding-bottom: 10px; border-bottom: 1px solid var(--rule); margin-bottom: 22px;
+  }
+  h2 .n {
+    font-family: var(--mono); font-size: 12px; font-weight: 400;
+    color: var(--ink-3); letter-spacing: .08em; margin-right: 12px;
+    vertical-align: 3px;
+  }
+  h3 { font-size: 18px; font-weight: 600; margin: 30px 0 10px; letter-spacing: -.005em; }
+  code, .mono { font-family: var(--mono); font-size: .86em; }
+  code { background: var(--panel-sunk); padding: 1px 5px; border-radius: 3px; }
+
+  .lede { font-size: 18.5px; color: var(--ink-2); }
+  .note {
+    border-left: 3px solid var(--flag);
+    background: var(--panel);
+    padding: 14px 18px; margin: 22px 0; max-width: var(--measure);
+  }
+  .note p:last-child { margin-bottom: 0; }
+  .note b { font-family: var(--display); font-weight: 700; }
+
+  /* figures --------------------------------------------------------------- */
+  figure { margin: 26px 0 0; }
+  .plot {
+    background: var(--panel); border: 1px solid var(--rule-soft);
+    padding: 18px 18px 10px;
+  }
+  figcaption {
+    font-size: 14px; color: var(--ink-3); margin-top: 10px;
+    max-width: 78ch; line-height: 1.5;
+  }
+  .figtitle {
+    font-family: var(--display); font-weight: 700; font-size: 15px;
+    margin-bottom: 2px; letter-spacing: -.005em;
+  }
+  .figsub {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px;
+  }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .grid-line { stroke: var(--rule-soft); stroke-width: 1; }
+  .axis-line { stroke: var(--rule); stroke-width: 1; }
+  .tick { font-family: var(--mono); font-size: 10px; fill: var(--ink-3); }
+  .axlab { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-3); letter-spacing: .07em; text-transform: uppercase; }
+  .barlab { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); }
+  .val { font-family: var(--mono); font-size: 11px; fill: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 12px; }
+  .legend span { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); }
+  .swatch { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 22px; }
+
+  /* tables ---------------------------------------------------------------- */
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--rule-soft); }
+  th {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--ink-3); font-weight: 400;
+    border-bottom: 1px solid var(--rule); white-space: nowrap;
+  }
+  td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.sym { font-family: var(--mono); font-weight: 600; }
+  .pill {
+    font-family: var(--mono); font-size: 10.5px; padding: 2px 8px;
+    border-radius: 99px; white-space: nowrap;
+  }
+  .pill.ev { background: var(--ev-wash); color: var(--ev); }
+  .pill.sol { background: var(--sol-wash); color: var(--sol); }
+
+  .bar-cell { position: relative; min-width: 108px; }
+  .bar-cell i {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    height: 9px; border-radius: 0 2px 2px 0;
+  }
+
+  /* tooltip --------------------------------------------------------------- */
+  #tip {
+    position: fixed; pointer-events: none; z-index: 50;
+    background: var(--panel); border: 1px solid var(--rule);
+    box-shadow: 0 6px 22px #0d16151f;
+    padding: 8px 11px; font-family: var(--mono); font-size: 11.5px;
+    color: var(--ink); line-height: 1.5; opacity: 0; transition: opacity .1s;
+  }
+  #tip b { font-size: 12.5px; }
+  footer {
+    margin-top: 64px; padding-top: 22px; border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">PRIDE PXD072052 &middot; Sus scrofa domesticus &middot; reanalysis</div>
+  <h1>Notochordal EV Corona Atlas</h1>
+  <p class="standfirst">
+    Fourteen runs, seven preparations, paired vesicle and soluble fractions &mdash; remapped to
+    human orthologs and read with the protein corona treated as biology rather than background.
+  </p>
+  <dl class="readout" id="readout"></dl>
+</header>
+
+<section>
+  <h2><span class="n">01</span>What this is</h2>
+  <div class="col">
+    <p class="lede">
+      PXD072052 is the deposit behind the notochordal-cell extracellular-vesicle atlas, in which
+      surface-adsorbed proteins &mdash; the corona &mdash; activate SMAD3/4 and suppress NF&kappa;B
+      signalling in chondrocyte-like cells. If the corona does the signalling, it cannot be filtered
+      out as contamination.
+    </p>
+    <p>
+      This reanalysis takes the deposited Proteome Discoverer protein groups, maps porcine
+      accessions onto human gene symbols, keeps only proteins that reproduce across donors, and
+      annotates them into vesicle, matrix, matricellular, growth-factor, surface and
+      intracellular layers. Every enrichment test runs against the proteins this preparation
+      actually contains, never the full human proteome.
+    </p>
+    <p>
+      The design makes one thing possible that most EV datasets cannot offer: each preparation was
+      measured twice, once as vesicles (EV) and once as the soluble fraction left behind (SOL). That
+      pairing turns &ldquo;is this a co-isolate?&rdquo; from an argument about annotation lists into a
+      measurement.
+    </p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">02</span>Three findings</h2>
+  <div class="col">
+    <p><b>The vesicle markers behave exactly as they should.</b> Every canonical marker is enriched in
+    the EV fraction &mdash; CD63, CD9, CD81, TSG101, the ESCRT components, flotillins, RAB27A/B. ALIX
+    (PDCD6IP) and RAB27A appear in EV runs and in no soluble run at all. Nothing was assumed about
+    which files were which; the assignment was tested against this biology before anything downstream
+    ran.</p>
+
+    <p><b>The matrix is overwhelmingly soluble, but a defined subset rides the vesicles.</b>
+    Thrombospondins, tenascin-X, periostin, perlecan and versican sit almost entirely in the soluble
+    fraction. Yet aggrecan, COMP, fibromodulin, CILP, collagen II, decorin, biglycan and SPARC are
+    detected in all seven EV preparations. A negative EV/SOL ratio is not a verdict of contamination
+    here &mdash; the soluble fraction <em>is</em> the secretome, so matrix proteins belong there; what
+    marks a corona protein is reproducible presence on the vesicles regardless.</p>
+
+    <p><b>The EV-enriched corona is a annexin and S100 layer.</b> The proteins most enriched on
+    vesicles relative to solution are the calcium-dependent phospholipid binders &mdash; annexins A1,
+    A2, A4, A5, A6, A7, A8 and S100A6/A10/A11 &mdash; alongside receptors (EGFR, IGF1R, INSR, ITGAV,
+    CD36) and matrix regulators such as ADAM9. This is a coherent surface layer, not a scatter of
+    leftovers.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">03</span>Getting the data out of a 223&nbsp;GB archive</h2>
+  <div class="col">
+    <p>
+      The processed results are deposited as a single ZIP64 archive of
+      <span class="mono">223,172,625,425</span> bytes. It holds eighteen members, and almost all of
+      that volume is Proteome Discoverer result databases of 56&ndash;77&nbsp;GB each. The protein
+      table is not one of them: it is 2.4&nbsp;MB.
+    </p>
+    <p>
+      The PRIDE mirror advertises <code>Accept-Ranges: bytes</code>, so the pipeline reads the ZIP64
+      central directory from the tail of the file, locates the two members it needs by name, and
+      inflates only those byte ranges &mdash; about 700&nbsp;KB transferred in total. No raw files
+      are downloaded and no spectra are re-searched.
+    </p>
+  </div>
+  <div class="note col">
+    <p><b>The local copy was unusable.</b> Eight of the ten previously downloaded
+    <code>.raw</code> files were zero bytes and the archive fragment on disk was a truncated
+    19&nbsp;MB that no ZIP reader would open. None of it was needed.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">04</span>Mapping pig to human, where most identifiers no longer exist</h2>
+  <div class="col">
+    <p>
+      The study searched a December 2023 <i>Sus scrofa</i> database. UniProt has since pruned the
+      porcine TrEMBL proteome heavily: <b id="delnum"></b> of the 4,116 accessions are now
+      <i>deleted</i> entries. A current-UniProt lookup alone silently loses more than half the atlas,
+      and a quarter of the deposited rows carry no gene symbol to fall back on.
+    </p>
+    <p>
+      Identity is therefore resolved from four sources in turn &mdash; current UniProt, the UniParc
+      archive, the deposited description, and the UniSave version history &mdash; then carried to
+      human by NCBI orthology, symbol passthrough, Ensembl Compara, or matching of descriptive
+      protein names against human SwissProt.
+    </p>
+  </div>
+  <figure>
+    <div class="plot">
+      <div class="figtitle">How each protein group reached a human symbol</div>
+      <div class="figsub">4,116 porcine accessions</div>
+      <div id="mapchart"></div>
+    </div>
+    <figcaption>
+      The most abundant protein in the entire dataset is deposited as &ldquo;Uncharacterized
+      protein&rdquo; with no gene name and a deleted accession. It is AHNAK, a well-described EV
+      protein, recovered here through the UniSave archive.
+    </figcaption>
+  </figure>
+  <div class="note col">
+    <p><b>Fibronectin is genuinely absent.</b> No fibronectin entry exists anywhere in the deposit
+    &mdash; only fibronectin type-III domain proteins. This survived every mapping layer, so it is a
+    property of the deposited results rather than a mapping failure, and is worth checking against the
+    original search output.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">05</span>What survives donor reproducibility</h2>
+  <div class="col">
+    <p>
+      A protein is retained when it is confidently identified in at least four of the seven EV
+      preparations, matching the threshold used in the source publication. Match-between-runs
+      quantification without an identification does not count toward detection.
+    </p>
+  </div>
+  <div class="two">
+    <figure>
+      <div class="plot">
+        <div class="figtitle">Detection breadth across EV preparations</div>
+        <div class="figsub">retained set, n = <span id="nret"></span></div>
+        <div id="repchart"></div>
+      </div>
+      <figcaption>More than half the retained proteome is present in all seven preparations.</figcaption>
+    </figure>
+    <figure>
+      <div class="plot">
+        <div class="figtitle">Total signal per run</div>
+        <div class="figsub">summed abundance, arbitrary units</div>
+        <div id="loadchart"></div>
+      </div>
+      <figcaption>
+        Soluble fractions carry 10&ndash;40&times; the protein load of vesicle fractions. Ratios are
+        therefore computed on composition-normalised values &mdash; what share of each fraction a
+        protein represents &mdash; which shifts the median log<sub>2</sub> ratio by
+        <b id="normshift"></b>&nbsp;units against the raw numbers. Both are kept in the output tables.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">06</span>The corona axis</h2>
+  <div class="col">
+    <p>
+      Each preparation contributes one paired EV&ndash;SOL comparison, so the contrast is a paired
+      test across seven donors rather than a comparison of group means. Proteins absent from every
+      soluble run are not imputed &mdash; absence is the measurement &mdash; and are tested on
+      detection counts instead.
+    </p>
+  </div>
+  <figure>
+    <div class="plot">
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--ev)"></i> curated EV marker</span>
+        <span><i class="swatch" style="background:var(--sol)"></i> corona / matrix candidate</span>
+        <span><i class="swatch" style="background:var(--ink-3);opacity:.45"></i> other retained protein</span>
+      </div>
+      <div class="figtitle">Vesicle fraction versus soluble fraction</div>
+      <div class="figsub">paired across 7 preparations &middot; hover any point</div>
+      <div id="volcano"></div>
+    </div>
+    <figcaption>
+      The corona candidates split into two lobes. The left lobe is structural matrix, far more
+      concentrated in solution; the right lobe is the vesicle-bound surface layer. The EV markers sit
+      entirely on the right, which is what validates the fraction assignment.
+    </figcaption>
+  </figure>
+
+  <div class="two">
+    <figure>
+      <div class="plot">
+        <div class="figtitle">Canonical EV markers</div>
+        <div class="figsub">log2 EV / SOL &middot; all positive</div>
+        <div id="evchart"></div>
+      </div>
+    </figure>
+    <figure>
+      <div class="plot">
+        <div class="figtitle">Most EV-enriched corona proteins</div>
+        <div class="figsub">log2 EV / SOL</div>
+        <div id="coronachart"></div>
+      </div>
+    </figure>
+  </div>
+
+  <h3>How corona candidates partition</h3>
+  <div class="scroll"><table id="coronatab"></table></div>
+</section>
+
+<section>
+  <h2><span class="n">07</span>Annotation layers</h2>
+  <div class="col">
+    <p>
+      Layers are deliberately non-exclusive: a proteoglycan can also be a growth-factor reservoir.
+      Each protein carries independent flags plus one primary class resolved by precedence, and two
+      opinions are recorded side by side &mdash; what the protein <i>is</i> (curated lists and Gene
+      Ontology) and where it actually <i>partitions</i> (the EV/SOL measurement).
+    </p>
+  </div>
+  <div class="scroll"><table id="layertab"></table></div>
+  <div class="note col">
+    <p><b>Two definitions were deliberately narrowed.</b> The GO term &ldquo;extracellular
+    exosome&rdquo; is annotated to 978 proteins here, largely because it is populated by EV
+    proteomics itself; using it to define the EV category would be circular, so the category uses
+    curated MISEV markers and the GO term is kept only as a weak flag. Likewise
+    &ldquo;cytosol&rdquo; propagates to most of the proteome, so the intracellular category uses
+    specific organelles only.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">08</span>Enrichment against the detected EV proteome</h2>
+  <div class="col">
+    <p>
+      The background for every test is the retained EV proteome itself &mdash;
+      <b id="bgn"></b> human symbols. Against the whole human proteome, &ldquo;extracellular
+      exosome&rdquo; and &ldquo;extracellular matrix&rdquo; are enriched in any vesicle preparation,
+      which tells you nothing. Against this background, a term is enriched only if it stands out
+      among proteins the preparation already contains.
+    </p>
+  </div>
+
+  <div class="two">
+    <figure>
+      <div class="plot">
+        <div class="figtitle">Reactome &mdash; corona candidates</div>
+        <div class="figsub">fold enrichment vs detected EV proteome</div>
+        <div id="reacchart"></div>
+      </div>
+    </figure>
+    <figure>
+      <div class="plot">
+        <div class="figtitle">Matrisome &mdash; soluble-enriched set</div>
+        <div class="figsub">fold enrichment &middot; non-circular tests only</div>
+        <div id="matchart"></div>
+      </div>
+    </figure>
+  </div>
+
+  <h3>Reactome pathways enriched in the EV-enriched set</h3>
+  <div class="scroll"><table id="reactab"></table></div>
+
+  <div class="note col">
+    <p><b>The background check passes.</b> Generic compartment terms collapse to a maximum of
+    <b id="exofold"></b>&times; fold enrichment &mdash; against the full proteome they would run far
+    higher. Meanwhile the specific term &ldquo;extracellular exosome biogenesis&rdquo; is enriched
+    55&times; in the curated marker set: small, mechanistic, and exactly what should survive.
+    Matrisome tests on query sets that are themselves defined by matrisome membership are marked
+    circular in the output and excluded from the figures above.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">09</span>The GAG machinery</h2>
+  <div class="col">
+    <p class="lede">
+      Notochordal cells sit in a proteoglycan-rich nucleus pulposus, and glycosaminoglycan content is
+      the functional readout of disc and cartilage repair. The atlas already reports the proteoglycan
+      core proteins; this asks a different question &mdash; do the vesicles carry the enzymes that
+      build the GAG chains onto them?
+    </p>
+    <p>
+      Six KEGG pathways define the machinery: chondroitin/dermatan sulfate, heparan sulfate, and
+      keratan sulfate biosynthesis, GAG degradation, the UDP-sugar precursor supply, and the PAPS
+      sulfate donor system. The last two are included because sulfation and nucleotide-sugar supply
+      are mechanistically required, but their genes are flagged &mdash; several are general metabolic
+      enzymes whose presence says nothing about GAG synthesis specifically.
+    </p>
+  </div>
+
+  <figure>
+    <div class="plot">
+      <div class="figtitle">Pathway coverage</div>
+      <div class="figsub">genes in pathway &middot; detected &middot; retained on vesicles</div>
+      <div class="scroll"><table id="gagcov"></table></div>
+    </div>
+  </figure>
+
+  <div class="col">
+    <p>
+      The machinery is present and confidently identified. <b>XYLT1</b> &mdash; xylosyltransferase-1,
+      the committed first step of GAG chain initiation &mdash; carries <b>78 unique peptides</b> and
+      is detected in all seven EV preparations. PAPSS2 carries 63, UGP2 64, CSGALNACT1 30, CHST3 29.
+      These are not marginal identifications.
+    </p>
+    <p>
+      But the direction is the finding, and it runs the other way.
+    </p>
+  </div>
+
+  <figure>
+    <div class="plot">
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--ev)"></i> retained on vesicles (&ge;4/7 preps)</span>
+        <span><i class="swatch" style="background:var(--ink-3);opacity:.55"></i> detected but below threshold</span>
+      </div>
+      <div class="figtitle">Every detected GAG-specific enzyme, by partition</div>
+      <div class="figsub">log2 EV / SOL &middot; hover for evidence</div>
+      <div id="gagchart"></div>
+    </div>
+    <figcaption>
+      Almost the entire set sits left of zero. Of <b id="gagn"></b> GAG-relevant proteins retained on
+      vesicles, <b id="gagsol"></b> are significantly soluble-enriched and <b id="gagev"></b> is
+      vesicle-enriched.
+    </figcaption>
+  </figure>
+
+  <div class="col">
+    <p>
+      Grouping by biosynthetic step separates two populations cleanly, and the split follows where
+      each enzyme works in the cell &mdash; read off the measurement, not assumed from annotation.
+      The Golgi-lumenal chain builders and sulfotransferases sit far to the soluble side. The
+      cytosolic nucleotide-sugar and sulfate-donor enzymes sit close to zero and are retained almost
+      completely: PAPSS1, PAPSS2, BPNT1, BPNT2, UGDH, UXS1, UGP2, GFPT1 are present in every EV
+      preparation.
+    </p>
+  </div>
+
+  <div class="scroll"><table id="gagsteps"></table></div>
+
+  <div class="note col">
+    <p><b>What this does and does not say.</b> Retained means detected on the vesicles in at least
+    four of seven preparations &mdash; the enzymes are really there. The negative ratios mean the
+    same proteins are far more abundant in the soluble fraction, which for Golgi-resident type&nbsp;II
+    membrane enzymes is consistent with shedding or with Golgi-derived material in the soluble pool.
+    The EV-enriched compartment contains <i>no</i> chain-building or sulfating enzyme at all. So the
+    pro-matrix effect of these vesicles is unlikely to work by delivering GAG-synthesis enzymes as
+    cargo &mdash; a constraint on the mechanism, not a null result.</p>
+  </div>
+
+  <h3>Enrichment against the detected EV proteome</h3>
+  <div class="col">
+    <p>
+      These pathways hold ten to thirty-eight genes each. Tested through g:Profiler's g<sub>SCS</sub>
+      correction against a 2,931-symbol background, none of them survives &mdash; which would report
+      &ldquo;nothing here&rdquo; about pathways whose genes are demonstrably present and strongly
+      directional. Fisher exact with Benjamini&ndash;Hochberg is the sensitive complement:
+    </p>
+  </div>
+  <div class="scroll"><table id="gagenr"></table></div>
+
+  <h3>The core proteins the machinery acts on</h3>
+  <div class="col">
+    <p>
+      For contrast, the proteoglycan core proteins themselves &mdash; the substrates &mdash; are
+      retained far more readily, though they too are soluble-dominant.
+    </p>
+  </div>
+  <div class="scroll"><table id="gagcore"></table></div>
+
+  <div class="note col">
+    <p><b>Absent entirely.</b> <span id="gagabsent" class="mono"></span></p>
+    <p>No hyaluronan synthase (HAS1, HAS2, HAS3) appears anywhere in the deposit, and neither does
+    the N-deacetylase/N-sulfotransferase family (NDST1&ndash;4) that initiates heparan sulfate
+    modification. These are listed as not-detected rows in the output table rather than omitted,
+    because an absence you cannot see is indistinguishable from one you never tested.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">10</span>What to check before relying on this</h2>
+  <div class="col">
+    <ul>
+      <li><b>Preparations are not confirmed as independent donors.</b> P13&ndash;P24 are preparation
+      identifiers from the deposit; whether each is a distinct animal or a pool is not recorded in the
+      study metadata. Reproducibility here is across preparations.</li>
+      <li><b>The two batches are unbalanced</b> &mdash; two preparations in TRY_0463, five in
+      TRY_0500. Direction of the EV/SOL ratio agrees across batches for
+      <b id="batchcons"></b> of the retained set; the rest should be treated cautiously.</li>
+      <li><b>117 protein groups remain unmapped</b>, mostly entries whose only description is a
+      protein family ("Annexin", "Profilin", "RNA helicase"). They are carried through the tables as
+      explicitly unmapped rather than guessed at.</li>
+      <li><b>The deposited table is one Proteome Discoverer export.</b> The absence of fibronectin
+      suggests confirming it against the original study output.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">11</span>Outputs</h2>
+  <div class="scroll"><table id="outtab"></table></div>
+</section>
+
+<footer>
+  Reanalysis of PRIDE PXD072052 &middot; Proteome Discoverer 2.5 protein groups, 14 runs &middot;
+  enrichment via g:Profiler with a custom background, matrisome by Fisher exact &middot;
+  annotations from the human matrisome masterlist, Gene Ontology, UniProt and NCBI orthology.
+</footer>
+</div>
+
+<div id="tip"></div>
+
+<script src="atlas_data.js"></script>
+<script>
+(function () {
+  const D = window.ATLAS;
+  const $ = (id) => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const fmt = (n) => n.toLocaleString("en-US");
+
+  /* masthead readout */
+  const rows = [
+    ["Accession", D.dataset.accession],
+    ["Runs", D.dataset.runs + " <small>7 EV / 7 SOL</small>"],
+    ["Preparations", D.dataset.preps],
+    ["Protein groups", fmt(D.dataset.protein_groups)],
+    ["Retained", fmt(D.dataset.retained) + " <small>&ge;4/7 EV</small>"],
+    ["Human symbols", fmt(D.dataset.retained_symbols)],
+    ["Mapped", Math.round(100 * D.mapping.mapped / D.mapping.total) + "% <small>of groups</small>"],
+  ];
+  $("readout").innerHTML = rows.map(r => `<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join("");
+  $("delnum").textContent = fmt(D.mapping.deleted_from_uniprot) + " (57%)";
+  $("nret").textContent = fmt(D.dataset.retained);
+  $("bgn").textContent = fmt(D.dataset.retained_symbols);
+  $("exofold").textContent = D.background_check.max_exosome_cc_fold;
+
+  /* tooltip */
+  const tip = $("tip");
+  function showTip(e, html) {
+    tip.innerHTML = html;
+    tip.style.opacity = 1;
+    const r = tip.getBoundingClientRect();
+    let x = e.clientX + 14, y = e.clientY - r.height - 10;
+    if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+    if (y < 8) y = e.clientY + 16;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  const hideTip = () => { tip.style.opacity = 0; };
+
+  /* horizontal bar chart -------------------------------------------------- */
+  function hbar(mount, items, opts) {
+    opts = opts || {};
+    const rowH = opts.rowH || 21, padL = opts.padL || 96, padR = 54, padT = 6;
+    const H = items.length * rowH + padT + 22, W = 460;
+    const max = Math.max(...items.map(d => Math.abs(d.value))) * 1.02;
+    const x = v => padL + (Math.abs(v) / max) * (W - padL - padR);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
+
+    [0, .25, .5, .75, 1].forEach(f => {
+      const gx = padL + f * (W - padL - padR);
+      svg.appendChild(el("line", { x1: gx, x2: gx, y1: padT, y2: padT + items.length * rowH, class: "grid-line" }));
+      const t = el("text", { x: gx, y: H - 6, class: "tick", "text-anchor": "middle" });
+      t.textContent = (max * f).toFixed(max < 5 ? 1 : 0);
+      svg.appendChild(t);
+    });
+
+    items.forEach((d, i) => {
+      const y = padT + i * rowH, h = rowH - 7;
+      const w = Math.max(x(d.value) - padL, 1.5);
+      const bar = el("rect", { x: padL, y: y + 3, width: w, height: h, rx: 2, fill: d.color || "var(--ev)" });
+      svg.appendChild(bar);
+      const lab = el("text", { x: padL - 8, y: y + h / 2 + 7, class: "barlab", "text-anchor": "end" });
+      lab.textContent = d.label;
+      svg.appendChild(lab);
+      const val = el("text", { x: padL + w + 7, y: y + h / 2 + 7, class: "val" });
+      val.textContent = opts.fmt ? opts.fmt(d.value) : d.value.toFixed(1);
+      svg.appendChild(val);
+      if (d.tip) {
+        const hit = el("rect", { x: 0, y: y, width: W, height: rowH, fill: "transparent" });
+        hit.addEventListener("mousemove", e => showTip(e, d.tip));
+        hit.addEventListener("mouseleave", hideTip);
+        svg.appendChild(hit);
+      }
+    });
+    const axl = el("text", { x: padL, y: H - 6, class: "axlab", "text-anchor": "start", opacity: 0 });
+    svg.appendChild(axl);
+    mount.appendChild(svg);
+  }
+
+  /* mapping routes */
+  const mLabels = {
+    symbol_exact: "symbol match", ncbi_ortholog: "NCBI orthology",
+    protein_name: "protein name", symbol_synonym: "symbol synonym",
+    ensembl_compara: "Ensembl Compara", unmapped: "unmapped"
+  };
+  hbar($("mapchart"),
+    Object.entries(D.mapping.methods).sort((a, b) => b[1] - a[1]).map(([k, v]) => ({
+      label: mLabels[k] || k, value: v,
+      color: k === "unmapped" ? "var(--ink-3)" : "var(--ev)",
+      tip: `<b>${mLabels[k] || k}</b><br>${fmt(v)} groups &middot; ${(100 * v / D.mapping.total).toFixed(1)}%`
+    })), { fmt: v => fmt(v) });
+
+  /* reproducibility */
+  (function () {
+    const mount = $("repchart"), W = 460, H = 210, padL = 42, padB = 34, padT = 8;
+    const vals = Object.entries(D.reproducibility).sort((a, b) => a[0] - b[0]);
+    const max = Math.max(...vals.map(v => v[1])) * 1.08;
+    const bw = (W - padL - 12) / vals.length;
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+    [0, .5, 1].forEach(f => {
+      const gy = padT + (1 - f) * (H - padT - padB);
+      svg.appendChild(el("line", { x1: padL, x2: W - 6, y1: gy, y2: gy, class: "grid-line" }));
+      const t = el("text", { x: padL - 8, y: gy + 4, class: "tick", "text-anchor": "end" });
+      t.textContent = fmt(Math.round(max * f)); svg.appendChild(t);
+    });
+    vals.forEach(([k, v], i) => {
+      const h = (v / max) * (H - padT - padB);
+      const x0 = padL + i * bw + 8;
+      svg.appendChild(el("rect", { x: x0, y: H - padB - h, width: bw - 16, height: h, rx: 2, fill: "var(--ev)" }));
+      const t = el("text", { x: x0 + (bw - 16) / 2, y: H - padB + 15, class: "tick", "text-anchor": "middle" });
+      t.textContent = k + " / 7"; svg.appendChild(t);
+      const vlab = el("text", { x: x0 + (bw - 16) / 2, y: H - padB - h - 5, class: "val", "text-anchor": "middle" });
+      vlab.textContent = fmt(v); svg.appendChild(vlab);
+    });
+    const ax = el("text", { x: padL, y: H - 4, class: "axlab" });
+    ax.textContent = "EV preparations with confident ID";
+    svg.appendChild(ax);
+    mount.appendChild(svg);
+  })();
+
+  /* run loading */
+  (function () {
+    const totals = D.run_totals;
+    const mount = $("loadchart"), W = 460, H = 210, padL = 46, padB = 34, padT = 8;
+    const max = Math.max(...Object.values(totals)) * 1.06;
+    const bw = (W - padL - 10) / D.samples.length;
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+    [0, .5, 1].forEach(f => {
+      const gy = padT + (1 - f) * (H - padT - padB);
+      svg.appendChild(el("line", { x1: padL, x2: W - 6, y1: gy, y2: gy, class: "grid-line" }));
+      const t = el("text", { x: padL - 8, y: gy + 4, class: "tick", "text-anchor": "end" });
+      t.textContent = Math.round(max * f); svg.appendChild(t);
+    });
+    D.samples.forEach((s, i) => {
+      const v = totals[s.f_number], h = (v / max) * (H - padT - padB);
+      const x0 = padL + i * bw + 2, w = bw - 5;
+      const isEV = s.fraction === "EV";
+      const rect = el("rect", { x: x0, y: H - padB - h, width: w, height: h, rx: 2,
+                                fill: isEV ? "var(--ev)" : "var(--sol)" });
+      rect.addEventListener("mousemove", e => showTip(e,
+        `<b>${s.prep} ${s.fraction}</b><br>${s.batch}<br>${v} &times;10<sup>9</sup>`));
+      rect.addEventListener("mouseleave", hideTip);
+      svg.appendChild(rect);
+      const t = el("text", { x: x0 + w / 2, y: H - padB + 14, class: "tick", "text-anchor": "middle" });
+      t.textContent = s.prep.replace("P", ""); svg.appendChild(t);
+    });
+    const ax = el("text", { x: padL, y: H - 3, class: "axlab" });
+    ax.textContent = "preparation · teal EV, rust SOL";
+    svg.appendChild(ax);
+    mount.appendChild(svg);
+  })();
+
+  /* volcano --------------------------------------------------------------- */
+  (function () {
+    const mount = $("volcano"), W = 1000, H = 430;
+    const padL = 58, padR = 18, padT = 14, padB = 46;
+    const pts = D.volcano;
+    const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y1 = Math.max(...ys);
+    const X = v => padL + ((v - x0) / (x1 - x0)) * (W - padL - padR);
+    const Y = v => H - padB - (v / (y1 * 1.05)) * (H - padT - padB);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+
+    for (let t = Math.ceil(x0 / 2.5) * 2.5; t <= x1; t += 2.5) {
+      svg.appendChild(el("line", { x1: X(t), x2: X(t), y1: padT, y2: H - padB, class: "grid-line" }));
+      const lb = el("text", { x: X(t), y: H - padB + 16, class: "tick", "text-anchor": "middle" });
+      lb.textContent = t; svg.appendChild(lb);
+    }
+    for (let t = 0; t <= y1; t += 2) {
+      svg.appendChild(el("line", { x1: padL, x2: W - padR, y1: Y(t), y2: Y(t), class: "grid-line" }));
+      const lb = el("text", { x: padL - 9, y: Y(t) + 4, class: "tick", "text-anchor": "end" });
+      lb.textContent = t; svg.appendChild(lb);
+    }
+    svg.appendChild(el("line", { x1: X(0), x2: X(0), y1: padT, y2: H - padB, class: "axis-line" }));
+    const sig = el("line", { x1: padL, x2: W - padR, y1: Y(1.301), y2: Y(1.301), class: "axis-line" });
+    sig.setAttribute("stroke-dasharray", "4 4"); svg.appendChild(sig);
+    const sigl = el("text", { x: W - padR - 4, y: Y(1.301) - 6, class: "tick", "text-anchor": "end" });
+    sigl.textContent = "q = 0.05"; svg.appendChild(sigl);
+
+    const xlab = el("text", { x: (padL + W - padR) / 2, y: H - 8, class: "axlab", "text-anchor": "middle" });
+    xlab.textContent = "← soluble-enriched      log2 EV / SOL      vesicle-enriched →";
+    svg.appendChild(xlab);
+    const ylab = el("text", { x: 14, y: (padT + H - padB) / 2, class: "axlab", "text-anchor": "middle",
+                              transform: `rotate(-90 14 ${(padT + H - padB) / 2})` });
+    ylab.textContent = "−log10 q"; svg.appendChild(ylab);
+
+    const order = { other: 0, corona: 1, ev: 2 };
+    const fillOf = { other: "var(--ink-3)", corona: "var(--sol)", ev: "var(--ev)" };
+    [...pts].sort((a, b) => order[a.k] - order[b.k]).forEach(p => {
+      const isOther = p.k === "other";
+      const c = el("circle", {
+        cx: X(p.x).toFixed(1), cy: Y(p.y).toFixed(1), r: isOther ? 2 : 3.6,
+        fill: fillOf[p.k], opacity: isOther ? 0.34 : 0.92
+      });
+      if (!isOther) { c.setAttribute("stroke", "var(--panel)"); c.setAttribute("stroke-width", "1.2"); }
+      c.addEventListener("mousemove", e => showTip(e,
+        `<b>${p.s || "unmapped"}</b><br>log2 EV/SOL ${p.x > 0 ? "+" : ""}${p.x}<br>−log10 q ${p.y}` +
+        (p.k !== "other" ? `<br>${p.k === "ev" ? "curated EV marker" : "corona candidate"}` : "")));
+      c.addEventListener("mouseleave", hideTip);
+      svg.appendChild(c);
+    });
+    mount.appendChild(svg);
+  })();
+
+  /* EV markers + corona bars */
+  hbar($("evchart"), D.ev_markers.slice(0, 14).map(d => ({
+    label: d.symbol, value: d.log2fc, color: "var(--ev)",
+    tip: `<b>${d.symbol}</b><br>log2 EV/SOL +${d.log2fc.toFixed(2)}`
+  })), { fmt: v => "+" + v.toFixed(1) });
+
+  hbar($("coronachart"), D.top_corona.slice(0, 14).map(d => ({
+    label: d.symbol, value: d.log2fc, color: "var(--sol)",
+    tip: `<b>${d.symbol}</b><br>log2 EV/SOL +${d.log2fc.toFixed(2)}<br>` +
+         `EV ${d.n_ev}/7 &middot; SOL ${d.n_sol}/7` + (d.category ? `<br>${d.category}` : "")
+  })), { fmt: v => "+" + v.toFixed(1) });
+
+  /* corona partition table */
+  const ciOrder = ["EV-enriched corona", "EV-bound, soluble-dominant",
+                   "EV-associated, undifferentiated", "predominantly soluble"];
+  const ciNote = {
+    "EV-enriched corona": "reproducible on vesicles and more concentrated there than in solution",
+    "EV-bound, soluble-dominant": "reproducible on vesicles, but far more abundant free — the classic corona signature",
+    "EV-associated, undifferentiated": "reproducible on vesicles, no significant partition either way",
+    "predominantly soluble": "does not meet the reproducibility threshold on vesicles"
+  };
+  const ciMax = Math.max(...ciOrder.map(k => D.corona_interpretation[k] || 0));
+  $("coronatab").innerHTML =
+    "<thead><tr><th>Partition</th><th>Groups</th><th></th><th>Reading</th></tr></thead><tbody>" +
+    ciOrder.map(k => {
+      const v = D.corona_interpretation[k] || 0;
+      const c = k === "predominantly soluble" ? "var(--ink-3)" : k.startsWith("EV-enriched") ? "var(--ev)" : "var(--sol)";
+      return `<tr><td class="sym">${k}</td><td class="num">${v}</td>
+        <td class="bar-cell"><i style="background:${c};width:${(100 * v / ciMax).toFixed(1)}%"></i></td>
+        <td>${ciNote[k]}</td></tr>`;
+    }).join("") + "</tbody>";
+
+  /* layers table */
+  const layMax = Math.max(...Object.values(D.layers).map(v => v.n));
+  $("layertab").innerHTML =
+    "<thead><tr><th>Layer</th><th>Retained</th><th></th><th>EV-enriched<br>or EV-exclusive</th><th>Share</th></tr></thead><tbody>" +
+    Object.entries(D.layers).map(([k, v]) =>
+      `<tr><td class="sym">${k}</td><td class="num">${fmt(v.n)}</td>
+       <td class="bar-cell"><i style="background:var(--ev);width:${(100 * v.n / layMax).toFixed(1)}%"></i></td>
+       <td class="num">${v.ev_side}</td>
+       <td class="num">${v.n ? Math.round(100 * v.ev_side / v.n) : 0}%</td></tr>`).join("") +
+    "</tbody>";
+
+  /* enrichment charts */
+  hbar($("reacchart"), D.enrichment.reactome_corona.slice(0, 8).map(d => ({
+    label: d.name.length > 24 ? d.name.slice(0, 23) + "…" : d.name,
+    value: d.fold, color: "var(--sol)",
+    tip: `<b>${d.name}</b><br>fold ${d.fold}&times; &middot; ${d.size} proteins<br>p = ${d.p.toExponential(1)}`
+  })), { padL: 176, fmt: v => v.toFixed(1) + "×" });
+
+  const matSol = D.enrichment.matrisome_noncircular.filter(d => d.query === "empirically_SOL_enriched");
+  hbar($("matchart"), matSol.map(d => ({
+    label: d.term, value: d.fold, color: "var(--sol)",
+    tip: `<b>${d.term}</b><br>fold ${d.fold}&times;<br>${d.observed} of ${d.query_size} soluble-enriched<br>q = ${d.q.toExponential(1)}`
+  })), { padL: 152, fmt: v => v.toFixed(1) + "×" });
+
+  /* reactome table */
+  $("reactab").innerHTML =
+    "<thead><tr><th>Pathway</th><th>Fold</th><th>Proteins</th><th>p</th></tr></thead><tbody>" +
+    D.enrichment.reactome_ev_enriched.map(d =>
+      `<tr><td>${d.name}</td><td class="num">${d.fold.toFixed(2)}&times;</td>
+       <td class="num">${d.size}</td><td class="num">${d.p.toExponential(1)}</td></tr>`).join("") +
+    "</tbody>";
+
+  /* ---- GAG section ------------------------------------------------------ */
+  const G = D.gag;
+  $("gagn").textContent = G.summary.retained_non_shared;
+  $("gagsol").textContent = G.summary.sol_enriched;
+  $("gagev").textContent = G.summary.ev_enriched;
+  $("gagabsent").textContent = G.absent.join(", ");
+
+  const covMax = Math.max(...G.coverage.map(c => c.total));
+  $("gagcov").innerHTML =
+    "<thead><tr><th>KEGG pathway</th><th>Genes</th><th>Detected</th><th>Retained</th><th></th></tr></thead><tbody>" +
+    G.coverage.map(c => `<tr><td class="sym">${c.pathway}</td>
+      <td class="num">${c.total}</td><td class="num">${c.detected}</td><td class="num">${c.retained}</td>
+      <td class="bar-cell" style="width:150px">
+        <i style="background:var(--ink-3);opacity:.35;width:${(100 * c.detected / covMax).toFixed(1)}%"></i>
+        <i style="background:var(--ev);width:${(100 * c.retained / covMax).toFixed(1)}%"></i>
+      </td></tr>`).join("") + "</tbody>";
+
+  /* diverging bar chart of every detected GAG-specific enzyme */
+  (function () {
+    const mount = $("gagchart"), items = G.genes;
+    const rowH = 19, padT = 8, padB = 30, padL = 92, padR = 58, W = 1000;
+    const H = items.length * rowH + padT + padB;
+    const lo = Math.min(...items.map(d => d.log2fc), 0);
+    const hi = Math.max(...items.map(d => d.log2fc), 0);
+    const span = Math.max(Math.abs(lo), Math.abs(hi)) * 1.08;
+    const X = v => padL + ((v + span) / (2 * span)) * (W - padL - padR);
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+
+    for (let t = -Math.floor(span); t <= span; t += 2) {
+      svg.appendChild(el("line", { x1: X(t), x2: X(t), y1: padT, y2: H - padB, class: "grid-line" }));
+      const lb = el("text", { x: X(t), y: H - padB + 15, class: "tick", "text-anchor": "middle" });
+      lb.textContent = t; svg.appendChild(lb);
+    }
+    svg.appendChild(el("line", { x1: X(0), x2: X(0), y1: padT, y2: H - padB, class: "axis-line" }));
+
+    items.forEach((d, i) => {
+      const y = padT + i * rowH, h = rowH - 7;
+      const a = X(Math.min(0, d.log2fc)), b = X(Math.max(0, d.log2fc));
+      const rect = el("rect", {
+        x: a, y: y + 3, width: Math.max(b - a, 1.5), height: h, rx: 2,
+        fill: d.retained ? "var(--ev)" : "var(--ink-3)",
+        opacity: d.retained ? 1 : 0.55
+      });
+      svg.appendChild(rect);
+      const lab = el("text", { x: padL - 8, y: y + h / 2 + 7, class: "barlab", "text-anchor": "end" });
+      lab.textContent = d.symbol; svg.appendChild(lab);
+      const val = el("text", { x: W - padR + 6, y: y + h / 2 + 7, class: "val" });
+      val.textContent = (d.log2fc > 0 ? "+" : "") + d.log2fc.toFixed(1);
+      svg.appendChild(val);
+      const hit = el("rect", { x: 0, y: y, width: W, height: rowH, fill: "transparent" });
+      hit.addEventListener("mousemove", e => showTip(e,
+        `<b>${d.symbol}</b><br>${d.step}<br>log2 EV/SOL ${d.log2fc > 0 ? "+" : ""}${d.log2fc}<br>` +
+        `EV ${d.ev}/7 &middot; SOL ${d.sol}/7<br>${d.pep} unique peptides<br>` +
+        (d.retained ? "retained on vesicles" : "below reproducibility threshold")));
+      hit.addEventListener("mouseleave", hideTip);
+      svg.appendChild(hit);
+    });
+    const ax = el("text", { x: X(0), y: H - 4, class: "axlab", "text-anchor": "middle" });
+    ax.textContent = "← soluble      log2 EV / SOL      vesicle →";
+    svg.appendChild(ax);
+    mount.appendChild(svg);
+  })();
+
+  /* functional step rollup */
+  $("gagsteps").innerHTML =
+    "<thead><tr><th>Biosynthetic step</th><th>In step</th><th>Detected</th><th>Retained</th>" +
+    "<th>Median log2 EV/SOL</th><th></th><th>SOL-enr.</th><th>EV-enr.</th></tr></thead><tbody>" +
+    G.steps.map(s => {
+      const w = Math.min(Math.abs(s.median_log2fc) / 5, 1) * 100;
+      return `<tr><td class="sym">${s.step}</td><td class="num">${s.in_step}</td>
+        <td class="num">${s.detected}</td><td class="num">${s.retained}</td>
+        <td class="num">${s.median_log2fc.toFixed(2)}</td>
+        <td class="bar-cell" style="width:120px"><i style="background:var(--sol);width:${w.toFixed(1)}%"></i></td>
+        <td class="num">${s.sol}</td><td class="num">${s.ev}</td></tr>`;
+    }).join("") + "</tbody>";
+
+  /* GAG enrichment */
+  $("gagenr").innerHTML =
+    "<thead><tr><th>Query set</th><th>Pathway or step</th><th>Observed</th><th>Fold</th><th>q</th></tr></thead><tbody>" +
+    (G.enrichment.length ? G.enrichment.map(e =>
+      `<tr><td><span class="pill ${e.query.startsWith("SOL") ? "sol" : "ev"}">${e.query.replace(/_/g, " ")}</span></td>
+       <td class="sym">${e.term.replace("GAG biosynthesis - ", "")}</td>
+       <td class="num">${e.observed} of ${e.in_bg}</td>
+       <td class="num">${e.fold}×</td><td class="num">${e.q.toExponential(1)}</td></tr>`).join("")
+      : `<tr><td colspan="5">No pathway reached q &lt; 0.05.</td></tr>`) + "</tbody>";
+
+  /* proteoglycan core proteins */
+  $("gagcore").innerHTML =
+    "<thead><tr><th>Core protein</th><th>EV preps</th><th>SOL preps</th><th>log2 EV/SOL</th><th>Retained</th></tr></thead><tbody>" +
+    G.core_proteins.map(c =>
+      `<tr><td class="sym">${c.symbol}</td><td class="num">${c.ev}/7</td><td class="num">${c.sol}/7</td>
+       <td class="num">${c.log2fc.toFixed(2)}</td>
+       <td>${c.retained ? '<span class="pill ev">retained</span>' : '<span class="pill sol">below threshold</span>'}</td></tr>`
+    ).join("") + "</tbody>";
+
+  /* outputs table */
+  const outs = [
+    ["results/ev_atlas_master.tsv", "Every protein group: abundances, detection per run, peptide evidence, ambiguity flags, reproducibility, EV/SOL statistics, all six layers, both classifications"],
+    ["results/retained_ev_proteome.tsv", "The ≥4/7 set — also the enrichment background"],
+    ["results/ortholog_map.tsv", "Mapping audit trail, including the 117 failures"],
+    ["results/classification_disagreements.tsv", "Where annotation and measurement conflict — 365 rows"],
+    ["results/category_*.tsv", "One table per annotation layer"],
+    ["results/enrichment_{go,reactome,kegg,matrisome}.tsv", "Background-corrected enrichment; matrisome rows carry a circularity flag"],
+    ["results/gag_pathway_genes.tsv", "Every gene in the six KEGG GAG pathways — detected or not — with membership, functional step, shared-metabolism flag and full evidence"],
+    ["results/gag_functional_steps.tsv", "Rollup by biosynthetic step"],
+    ["results/gag_enrichment.tsv", "Fisher enrichment per pathway and step, with an underpowered flag"],
+    ["results/gag_core_proteins.tsv", "Proteoglycan core proteins cross-referenced against the enzyme set"],
+    ["results/qc/", "Run-level QC and summary figures"],
+    ["src/01–08", "Reproducible pipeline; delete data/raw and rerun to reproduce end to end"]
+  ];
+  $("outtab").innerHTML =
+    "<thead><tr><th>File</th><th>Contents</th></tr></thead><tbody>" +
+    outs.map(o => `<tr><td class="sym">${o[0]}</td><td>${o[1]}</td></tr>`).join("") + "</tbody>";
+
+  $("batchcons").textContent = fmt(D.batch_consistent) + " of " + fmt(D.dataset.retained);
+  $("normshift").textContent = D.normalisation_shift;
+})();
+</script>
